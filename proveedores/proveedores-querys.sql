@@ -156,3 +156,10 @@ GROUP BY e1.id_art, e1.id_comp, e1.ciudad
 HAVING e1.ciudad = ALL (SELECT e2.ciudad FROM
 					(envio NATURAL JOIN componente) e2
 					WHERE e1.id_art = e2.id_art);
+					
+-- Obtener los id_art para los que se provean envíos de TODOS los componentes
+-- existentes en la BBDD:
+SELECT id_art
+FROM envio
+GROUP BY id_art
+HAVING count(DISTINCT id_comp) = (SELECT count(id_comp) FROM componente);
