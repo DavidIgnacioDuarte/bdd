@@ -28,9 +28,18 @@ FROM gol
 WHERE nombre_goleador = 'Messi' AND id_partido = 103243;
 
 -- Estadios donde se sacó alguna tarjeta amarilla y alguna roja:
+-- CORREGIDO -> Ahora sí devuelve correctamente, contemplando la igualdad en el JOIN CONDICIONAL:
 SELECT DISTINCT nombre, cantidad_banderitas FROM
-estadio NATURAL JOIN partido
+estadio JOIN partido ON estadio.nombre = partido.estadio
 NATURAL JOIN tarjeta_amarilla NATURAL JOIN tarjeta_roja;
+--OPCIÓN 2:
+SELECT nombre, cantidad_banderitas FROM
+partido NATURAL JOIN tarjeta_roja
+JOIN estadio ON estadio.nombre = partido.estadio
+INTERSECT
+SELECT nombre, cantidad_banderitas FROM
+partido NATURAL JOIN tarjeta_amarilla
+JOIN estadio ON estadio.nombre = partido.estadio;
 
 -- Jugadores que recibieron tarjetas amarillas Y NO rojas:
 SELECT nombre_amonestado
@@ -68,3 +77,4 @@ SELECT nombre_seleccion, COUNT(nombre_seleccion) AS goles FROM
 gol JOIN jugador_de_seleccion ON nombre = nombre_goleador
 GROUP BY nombre_seleccion
 ORDER BY COUNT(id_partido) DESC;
+
